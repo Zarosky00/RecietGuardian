@@ -30,6 +30,7 @@ In addition to return deadlines, Receipt Guardian serves as your integrated fina
   $$\text{Net Spending} = \sum(\text{Active/Warranty Receipts}) - \sum(\text{Refunded Receipts})$$
 * **Interactive Budget Thresholds:** Compare monthly net spending against a user profile `budget_limit`. Visual progress indicators warn you at 80% limit (Amber) and >=100% limit (Red).
 * **Pending Bills:** Localized ledger tracking unpaid recurring invoices. Paying a pending bill moves the entry into the active database expense feed.
+* **Visual Spend Insights:** An interactive graphical dashboard charting your expenditures in real time, displaying monthly cash-flow trends, spending distribution by categories (pie/bar charts), and category budget progress indicators.
 
 ### 2. Tax & Reimbursement Tracking
 * **Tax Deductibility Identification:** The AI extraction engine identifies and tags tax-deductible items from receipts based on merchants, items, or user manual overrides.
