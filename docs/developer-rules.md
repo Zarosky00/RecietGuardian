@@ -22,7 +22,7 @@ Every directory has a single, strict responsibility. Mixing layouts, business lo
 
 | Directory | Allowed Contents | Rules |
 | :--- | :--- | :--- |
-| **`app/`** | Expo Router Screen files, Tab layouts, and Root routing sheets. | **Screen components only.** Screens must act as layouts that read data from custom hooks (e.g. `useReceipts`) and pass them as props to components. Keep inline states minimal. |
+| **`app/`** | Expo Router Screen files, Tab layouts, and Root routing sheets. | **Screen components only.** Contains only production routes. No development sandbox files are allowed. The root `app/index.tsx` dynamically routes to either production pages or the sandbox via `process.env.EXPO_PUBLIC_APP_MODE === 'sandbox'`. |
 | **`components/ui/`** | Visual primitive components (custom buttons, text fields, loaders using `<View>`, `<Text>`, `<Pressable>`). | **No business logic, no hooks, no API calls, no database imports.** These components are 100% reusable and styled via Tailwind props. |
 | **`components/layout/`** | Visual structure wrappers (custom headers, nav panels, custom modal overlays). | Controls overall layout views and presentation wrappers. |
 | **`components/features/`** | Domain-specific visual components (receipt lists, warranty status tags, category wheels). | Receives data and triggers event callbacks (e.g., `onPressReceipt`). |
@@ -36,7 +36,7 @@ To prevent the `test/` folder itself from becoming cluttered, files must be plac
 * **`test/sandbox/`**: Strictly for active visual UI mockup screens.
   * *Subfolder Classification:* Group mockup files by feature (e.g., `test/sandbox/dashboard/`, `test/sandbox/auth/`, `test/sandbox/receipts/`).
   * *Pruning Rule:* Once a layout is finalized and implemented in production, immediately delete it from the sandbox or move it to `test/archive/`.
-* **`test/mock-data/`**: Strictly for mock factories (e.g. `mock-receipts-generator.ts`) or static JSON data used to feed the sandbox UI.
+* **`test/mock-data/`**: Strictly for mock factories (e.g. `mock-receipt-generator.ts`) or static JSON data used to feed the sandbox UI.
 * **`test/scripts/`**: Strictly for raw, CLI playground scripts (e.g. running a local test to verify parsing algorithms).
 * **`test/logs/`**: Strictly for runtime debug printouts and raw email samples (Git-ignored).
 * **`test/archive/`**: For temporary preservation of retired visual layouts or reference draft files.
@@ -48,11 +48,27 @@ To prevent the `test/` folder itself from becoming cluttered, files must be plac
 To ensure that moving a UI prototype from the sandbox to the production directory is seamless and never breaks:
 
 ### Prototyping Phase
-1. **Never edit production files directly.**
-2. **Mirror Production Contracts:** When designing a mockup component, define its TypeScript props (`interface`) exactly as it will exist in the final app (e.g., `interface ReceiptCardProps { receipt: Receipt; onDelete: (id: string) => void; }`).
-3. **Interactive Mock Stubs:** Wire event handlers (`onPress`, `onDelete`) using local React state modification of mock data so the screen behaves interactively in the sandbox.
-4. **Use Shared Types:** Import standard types from `types/` directly into sandbox files, rather than redefining them locally.
-5. **Absolute Path Aliases Only:** **Never use relative paths** (e.g., `../../components/...`) inside component imports. Always use absolute path aliases starting with `@/` (configured in `tsconfig.json`, e.g., `import { Button } from "@/components/ui/button"`). This guarantees that files can be moved anywhere inside the workspace without breaking any import statements.
+1. **Never create routes or folders like `app/test-sandbox/` inside the production routing directory.**
+2. **Environment-Driven Local Dev Running:** Launch sandbox mode completely separate from the main production application. Define a `package.json` script:
+   - `npm run start:sandbox` setting `EXPO_PUBLIC_APP_MODE=sandbox` and starting Expo on an isolated port (e.g. `--port 8082`).
+3. **Conditional Root Entry Mapping:** In the main production index file `app/index.tsx`, use a conditional check to mount either the main production page or the active sandbox module:
+   ```tsx
+   import ProductionIndex from "@/app/production/index";
+   import SandboxDashboard from "@/test/sandbox/dashboard/index";
+   
+   export default function AppEntry() {
+     if (process.env.EXPO_PUBLIC_APP_MODE === 'sandbox') {
+       return <SandboxDashboard />;
+     }
+     return <ProductionIndex />;
+   }
+   ```
+4. **Mirror Production Contracts:** When designing a mockup component, define its TypeScript props (`interface`) exactly as it will exist in the final app (e.g., `interface ReceiptCardProps { receipt: Receipt; onDelete: (id: string) => void; }`).
+5. **Interactive Mock Stubs:** Wire event handlers (`onPress`, `onDelete`) using local React state modification of mock data so the screen behaves interactively in the sandbox.
+6. **Use Shared Types:** Import standard types from `types/` directly into sandbox files, rather than redefining them locally.
+7. **Absolute Path Aliases Only:** **Never use relative paths** (e.g., `../../components/...`) inside component imports. Always use absolute path aliases starting with `@/` (configured in `tsconfig.json`, e.g., `import { Button } from "@/components/ui/button"`). This guarantees that files can be moved anywhere inside the workspace without breaking any import statements.
+   - *Why it arises:* Inside the sandbox, files in the `variants/` folder imported files from the `components/` folder using relative paths like `../components/RetroCard`. When these files were separated into their production folders (`components/features/` and `components/ui/`), these relative paths broke. Enforcing absolute path aliases prevents this concern.
+
 
 ### Transition Phase
 Once you approve the UI design:
