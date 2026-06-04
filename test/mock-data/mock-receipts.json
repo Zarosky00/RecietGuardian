@@ -1,0 +1,132 @@
+[
+  {
+    "id": "rec-101",
+    "store_name": "Software Depot",
+    "total_amount": 599.99,
+    "currency": "USD",
+    "purchase_date": "2026-05-28",
+    "return_deadline": "2026-06-27",
+    "warranty_expiry": "2027-05-28",
+    "status": "active",
+    "is_reimbursable": true,
+    "is_tax_related": true,
+    "category": "Tech",
+    "items": [
+      {
+        "name": "Operating System V95 License",
+        "price": 199.99,
+        "category": "Tech"
+      },
+      {
+        "name": "Database Builder Suite Pro",
+        "price": 400.00,
+        "category": "Tech"
+      }
+    ]
+  },
+  {
+    "id": "rec-102",
+    "store_name": "Vintage Tech Store",
+    "total_amount": 120.00,
+    "currency": "USD",
+    "purchase_date": "2026-05-15",
+    "return_deadline": "2026-06-14",
+    "warranty_expiry": "2026-11-15",
+    "status": "active",
+    "is_reimbursable": false,
+    "is_tax_related": false,
+    "category": "Tech",
+    "items": [
+      {
+        "name": "Mechanical Keyboard (Clicky)",
+        "price": 120.00,
+        "category": "Tech"
+      }
+    ]
+  },
+  {
+    "id": "rec-103",
+    "store_name": "Terminal Coffee",
+    "total_amount": 15.50,
+    "currency": "USD",
+    "purchase_date": "2026-06-03",
+    "return_deadline": "2026-06-10",
+    "warranty_expiry": null,
+    "status": "active",
+    "is_reimbursable": true,
+    "is_tax_related": false,
+    "category": "Food",
+    "items": [
+      {
+        "name": "Espresso Shot x3",
+        "price": 7.50,
+        "category": "Food"
+      },
+      {
+        "name": "Glazed Donut Pack",
+        "price": 8.00,
+        "category": "Food"
+      }
+    ]
+  },
+  {
+    "id": "rec-104",
+    "store_name": "Classic Apparel Inc",
+    "total_amount": 85.00,
+    "currency": "USD",
+    "purchase_date": "2026-04-10",
+    "return_deadline": "2026-05-10",
+    "warranty_expiry": null,
+    "status": "expired",
+    "is_reimbursable": false,
+    "is_tax_related": false,
+    "category": "Apparel",
+    "items": [
+      {
+        "name": "Retro Styled Denim Jacket",
+        "price": 85.00,
+        "category": "Apparel"
+      }
+    ]
+  },
+  {
+    "id": "rec-105",
+    "store_name": "Retro Gaming Hub",
+    "total_amount": 45.00,
+    "currency": "USD",
+    "purchase_date": "2026-05-20",
+    "return_deadline": "2026-06-19",
+    "warranty_expiry": null,
+    "status": "refunded",
+    "is_reimbursable": false,
+    "is_tax_related": false,
+    "category": "Entertainment",
+    "items": [
+      {
+        "name": "Cartridge Cleaner Kit",
+        "price": 45.00,
+        "category": "Entertainment"
+      }
+    ]
+  },
+  {
+    "id": "rec-106",
+    "store_name": "Office Logistics",
+    "total_amount": 250.00,
+    "currency": "USD",
+    "purchase_date": "2026-06-01",
+    "return_deadline": "2026-07-01",
+    "warranty_expiry": "2027-06-01",
+    "status": "active",
+    "is_reimbursable": true,
+    "is_tax_related": true,
+    "category": "Office",
+    "items": [
+      {
+        "name": "Ergonomic Office Chair Mesh",
+        "price": 250.00,
+        "category": "Office"
+      }
+    ]
+  }
+]

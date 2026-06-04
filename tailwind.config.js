@@ -5,13 +5,18 @@ module.exports = {
     "./components/**/*.{js,jsx,ts,tsx}",
     "./test/sandbox/**/*.{js,jsx,ts,tsx}"
   ],
+  important: true,
   theme: {
     extend: {
       colors: {
-        obsidian: {
-          light: '#1e1b18',
-          DEFAULT: '#0c0a09',
-          dark: '#030202',
+        retro: {
+          bg: '#f0efe9',
+          card: '#ffffff',
+          border: '#1a1a1a',
+          teal: '#008080',
+          navy: '#000080',
+          gray: '#e5e5e0',
+          darkgray: '#7a7a7a',
         }
       }
     },

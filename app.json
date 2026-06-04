@@ -4,12 +4,12 @@
     "slug": "receipt-guardian",
     "version": "1.0.0",
     "orientation": "portrait",
-    "userInterfaceStyle": "dark",
+    "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true
     },
     "android": {
-      "userInterfaceStyle": "dark"
+      "userInterfaceStyle": "light"
     },
     "plugins": [
       "expo-router"
