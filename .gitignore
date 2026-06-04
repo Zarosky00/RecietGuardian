@@ -1,0 +1,29 @@
+# Expo and Metro
+.expo/
+*.jks
+*.p8
+*.keystore
+*.ap_
+*.apk
+*.aab
+web-build/
+.metro/
+
+# Dependencies
+node_modules/
+
+# OS Files
+.DS_Store
+Thumbs.db
+*.log
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Test Logs & Temporary Sandbox Archive Outputs
+test/logs/*
+!test/logs/.gitkeep
+test/archive/*
+!test/archive/.gitkeep
