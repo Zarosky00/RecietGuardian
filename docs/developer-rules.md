@@ -69,7 +69,12 @@ When designing multiple variations of the same screen layout (e.g., Variant A vs
 
 ### 💾 3b. Archiving & Git Safety Net (Recovering Old Designs)
 * **The Archive Rule:** Before finalizing a UI and deleting its sandbox directory, move any designs you want to keep for visual reference into the `test/archive/` folder.
-* **The Commit Rule:** Ensure you commit your active sandbox screen code to Git (e.g. `git commit -m "sandbox: completed dashboard variant A layout"`) before changing or deleting it.
+* **The Commit Rule:** Ensure you commit your active sandbox screen code to Git (e.g., `git commit -m "sandbox: completed dashboard variant A layout"`) before changing or deleting it.
+
+### 🎨 3c. The Living Design System Rule
+* **Dynamic Spec Evolution:** Do not establish static design tokens or styling guidelines beforehand.
+* **Update on Approval:** Whenever a UI layout, card structure, theme color, or custom animation is approved inside the sandbox, the developer/AI must immediately write or update the corresponding styles in `docs/design.md`.
+* **Visual Blueprint:** Once a style token is documented in `docs/design.md`, it becomes the mandatory visual guideline for all future mobile components to maintain design consistency.
 
 ---
 
