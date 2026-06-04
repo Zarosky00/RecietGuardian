@@ -1,82 +1,164 @@
-# Receipt Guardian (Mobile Client)
+# Receipt Guardian
 
-> Never miss a return window or tax deduction again.
+> Never miss a return window again.
 
-Receipt Guardian is a cross-platform mobile application built with **React Native and Expo**. It acts as your private financial command center—automatically extracting return deadlines, manufacturer warranties, pricing details, and tax categories from forwarded emails, scanned photos, or PDFs using a tiered AI strategy (Gemini + Groq).
+Forward your order confirmation emails. AI extracts item details, price, and return deadlines automatically. See everything in a clean dashboard with smart alerts.
+
+## Status
+
+MVP implementation is now in place:
+
+- Next.js App Router + TypeScript + Tailwind
+- Supabase Auth, protected dashboard, and receipt CRUD
+- Manual email paste extraction with Gemini primary and Groq fallback
+- Manual Gmail API "Check Inbox Now" ingestion
+- Duplicate Gmail message protection through `email_logs.gmail_message_id`
+- 3-day deadline notification cron using Resend
+- Critical unit tests for deadline logic, JSON repair, AI fallback, and Gmail parsing
+
+Pub/Sub push ingestion remains deferred for a later zero-cost automation upgrade.
 
 ---
 
-## 🚀 Key Features & Modules
+## 💰 Expense & Tax Tracking System (Enhanced)
 
-### 1. Ingestion Pipelines
-* **Gmail Auto-Fetch:** Scans Gmail inboxes for order receipts via API keys/tokens. Allows toggling sync checks, adjusting days/limit depth, and displaying terminal-style scan logs.
-* **Manual Mail Forwarding:** Generates a custom personal forwarding address so users can forward receipts directly.
-* **AI Text Extractor:** An input area where users paste raw email/receipt body text, which is parsed into a structured receipt by Gemini/Groq.
-* **Direct Camera Scanning (Scan Camera):** Interface for using the device camera to take physical receipt photos.
-* **Direct File Upload (Upload File):** Uploads PDF, JPG, and PNG receipts/invoices.
+In addition to return deadlines, Receipt Guardian serves as your integrated financial and tax manager:
 
-### 2. 💳 The Expense Tracking System
-Receipt Guardian goes beyond tracking return deadlines by serving as an interactive personal expense ledger:
+### 1. The Expense Ledger
 * **Receipt-to-Expense Mapping:** Every scanned or forwarded receipt is mapped directly into your spending history.
-* **Refund Deduction Math:** Any receipt record marked as `status === "refunded"` contains a negative representation of the price. The system automatically computes your net monthly spending:
+* **Refund Deduction Math:** Refunded receipts (marked as `status === "refunded"`) deduct from your monthly spending. Net spending is computed as:
   $$\text{Net Spending} = \sum(\text{Active/Warranty Receipts}) - \sum(\text{Refunded Receipts})$$
-* **Interactive Budget Thresholds:** Tracks spending against a monthly budget limit set in your profile.
-  * **Green (< 80%):** Healthy spending state.
-  * **Amber (80% - 99%):** Warning highlight (nearing limit).
-  * **Red (>= 100%):** Alert (over budget limit).
-* **Pending Bills Ledger:** A dedicated screen to log unpaid incoming invoices. Tapping "Pay Bill" dynamically transitions the item out of the pending ledger and into the active database expense feed.
-* **Category Scroller:** Filters receipt cards dynamically across segments (Food, Tech, Apparel, Home, Travel, etc.).
+* **Interactive Budget Thresholds:** Compare monthly net spending against a user profile `budget_limit`. Visual progress indicators warn you at 80% limit (Amber) and >=100% limit (Red).
+* **Pending Bills:** Localized ledger tracking unpaid recurring invoices. Paying a pending bill moves the entry into the active database expense feed.
 
-### 3. 📄 The Tax & Reimbursement System
-Simplifies tax filing and corporate expense reports:
-* **Tax Dedutibility Identification:** The AI extraction engine identifies and tags tax-deductible items from receipts based on merchants, items, or user manually selected parameters.
-* **Reimbursements:** Tracks business expenses with a toggle switch (`is_reimbursable: boolean`) to distinguish personal outlays from company out-of-pocket costs.
-* **Tax Flags:** Marks transactions as tax-related (`is_tax_related: boolean`) to easily compile and export audited records for tax season.
+### 2. Tax & Reimbursement Tracking
+* **Tax Deductibility Identification:** The AI extraction engine identifies and tags tax-deductible items from receipts based on merchants, items, or user manual overrides.
+* **Corporate Reimbursements:** Track business-related expenses with a toggle switch (`is_reimbursable: boolean`) to isolate company out-of-pocket costs from personal spending.
+* **Tax Logs:** Flag transactions as tax-related (`is_tax_related: boolean`) to easily compile, search, and export audited records for tax season.
 
 ---
 
-## 🛠️ Project Structure
+## Quick Start
 
-Following a strict **decoupled, uncluttered architecture**, the directories are structured as follows:
-
-```
-Receipt Guardian/
-├── 📁 app/               # Expo Router Screen components & layouts
-├── 📁 components/        # Visual components (ui/, layout/, features/)
-├── 📁 hooks/             # Custom state hooks (e.g. useReceipts, useCamera)
-├── 📁 lib/               # Pure libraries (ai/, email/, supabase/)
-├── 📁 types/             # Core TypeScript interfaces
-└── 📁 test/              # Sandbox playground (sandbox/, mock-data/, scripts/)
-```
-
-*Note: All development, visual experimentation, and testing occur inside `test/sandbox/` using mock data factories. Production folders (`app/`, `components/`) remain 100% clean and compile-ready.*
-
----
-
-## 🏃‍♂️ Quick Start
-
-### 1. Install Dependencies
 ```bash
 npm install
+npm run dev
 ```
 
-### 2. Run the Development Server
+Open `http://localhost:3000`.
+
+## Environment
+
+Copy `.env.example` to `.env.local` and fill the values prepared in `user.md`.
+Never commit `.env.local`.
+
+Required for core local use:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+GOOGLE_AI_API_KEY=
+GROQ_API_KEY=
+GMAIL_CLIENT_ID=
+GMAIL_CLIENT_SECRET=
+GMAIL_REFRESH_TOKEN=
+GMAIL_USER_EMAIL=
+RESEND_API_KEY=
+FROM_EMAIL=onboarding@resend.dev
+APP_URL=http://localhost:3000
+CRON_SECRET=
+```
+
+Generate a Gmail refresh token after setting `GMAIL_CLIENT_ID` and `GMAIL_CLIENT_SECRET`:
+
 ```bash
-# Start the Expo bundler
-npm run start
-
-# Run specifically on Android emulator
-npm run android
-
-# Run specifically on iOS simulator
-npm run ios
+npm run gmail:token
 ```
 
-*To preview on a physical phone, download the **Expo Go** app from the App Store or Google Play Store and scan the QR code printed in the terminal.*
+## Database
 
----
+Run the SQL in `docs/01-data-model-and-api.md` section `1.1 Basic Supabase Initialization SQL` in the Supabase SQL editor. That schema is the source of truth for the MVP.
 
-## 🔒 AI Assistant Guardrails
-All AI coding assistants editing this workspace must adhere to these two safety rules:
-1. **Absolute Path Aliases Only:** Never write relative imports (e.g., `../../../../`). You must use absolute paths prefixed with `@/` (e.g., `@/components/ui/button`) to support plug-and-play directory transitions.
-2. **No Placeholder Code Truncation:** Do not replace working code logic with placeholder comments (e.g., `// ... rest of the code here`). Always write complete, functional blocks.
+## Checks
+
+```bash
+npm run lint
+npm run typecheck
+npm test
+npm run build
+```
+
+## Vercel
+
+Import the existing GitHub repo into Vercel Hobby and add the same environment variables from `.env.local`. `vercel.json` configures one daily cron at `/api/cron/check-deadlines`, which stays within the Hobby once-daily limit.
+
+## Known MVP Limitations
+
+- Users must forward from the same email used for signup.
+- Gmail ingestion is manual through "Check Inbox Now"; Pub/Sub is documented for later and not required now.
+- Raw Gmail text is stored only for processed Gmail receipts and truncated to 10,000 characters; define a retention policy before public launch.
+- Public API rate limiting is not implemented yet. Add a free/simple limiter before a broad public launch.
+- Resend may restrict sending to verified recipients/domains on some accounts; keep `onboarding@resend.dev` for the free MVP unless Resend requires a different free sender.
+
+## Project Structure
+
+```
+docs/                          # Planning & specification
+  00-prd.md                    # Product requirements
+  01-data-model-and-api.md     # Database schema + API spec
+  02-architecture.md           # System design + tech stack
+  03-design-system.md          # Colors, typography, components
+  04-testing-and-debugging.md  # Testing strategy + debug guide
+  05-deployment.md             # Vercel + Supabase setup
+  06-decisions-log.md          # Technical decisions + risks
+
+app/                           # Next.js App Router (pages)
+  api/                         # Extract, receipts, Gmail, cron, health
+components/                    # Reusable UI components
+lib/                           # Utilities, AI, database
+  ai/                          # Gemini + Groq extraction
+  auth/                        # Auth helpers
+  email/                       # Gmail client/parser/processing
+  notifications/               # Resend deadline checks
+  receipts/                    # Validation, mapping, urgency logic
+  supabase/                    # Browser, server, and admin clients
+
+types/                         # TypeScript interfaces
+tests/                         # Critical unit tests
+scripts/                       # Dev + debug scripts
+```
+
+## Tech Stack
+
+| Layer | Technology | Cost |
+|-------|-----------|------|
+| Framework | Next.js 15 + TypeScript | $0 |
+| Styling | Tailwind CSS + shadcn/ui | $0 |
+| Database | Supabase (PostgreSQL) | $0 |
+| Auth | Supabase Auth | $0 |
+| AI | Google Gemini + Groq fallback | $0 |
+| Email | Gmail API (MVP) → Cloudflare (prod) | $0 |
+| Notifications | Resend | $0 |
+| Hosting | Vercel | $0 |
+
+## Core Flow
+
+```
+User forwards order email ──▶ AI extracts data ──▶ Saved to database ──▶ Dashboard shows deadline ──▶ Alerts before expiry
+```
+
+## Docs
+
+- **[PRD](docs/00-prd.md)** — Features, user stories, acceptance criteria
+- **[Data Model & API](docs/01-data-model-and-api.md)** — Schema, endpoints, TypeScript types
+- **[Architecture](docs/02-architecture.md)** — System diagram, data flow, env vars
+- **[Design System](docs/03-design-system.md)** — Colors, spacing, components, animations
+- **[Testing & Debugging](docs/04-testing-and-debugging.md)** — Test strategy, common issues
+- **[Deployment](docs/05-deployment.md)** — Vercel, Supabase, cron jobs, monitoring
+- **[Decisions & Risks](docs/06-decisions-log.md)** — Why we chose what we chose
+- **[Implementation Plan](docs/07-implementation-plan.md)** — Agent-ready step-by-step $0 build plan
+
+## Cost Policy
+
+This MVP is designed to run on free tiers only. Do not add paid services, paid domains, paid API credits, Vercel Pro, or Supabase Pro for the MVP.
