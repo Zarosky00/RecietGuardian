@@ -1,22 +1,32 @@
-/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
     "./app/**/*.{js,jsx,ts,tsx}",
     "./components/**/*.{js,jsx,ts,tsx}",
-    "./test/sandbox/**/*.{js,jsx,ts,tsx}"
+    "./test/**/*.{js,jsx,ts,tsx}",
   ],
-  important: true,
   theme: {
     extend: {
       colors: {
-        retro: {
-          bg: '#f0efe9',
-          card: '#ffffff',
-          border: '#1a1a1a',
-          teal: '#008080',
-          navy: '#000080',
-          gray: '#e5e5e0',
-          darkgray: '#7a7a7a',
+        crt: {
+          bg: "#0a0f0d",
+          fg: "#33ff33",
+          amber: "#ffb000",
+          dim: "#114411",
+        },
+        win95: {
+          bg: "#c0c0c0",
+          blue: "#000080",
+          light: "#ffffff",
+          shadow: "#808080",
+          darkShadow: "#0a0a0a",
+          inputBg: "#ffffff",
+        },
+        synth: {
+          bg: "#0d0221",
+          pink: "#ff007f",
+          cyan: "#00f0ff",
+          purple: "#7000ff",
+          yellow: "#ffd700",
         }
       }
     },

@@ -1,33 +1,33 @@
 export interface ReceiptItem {
-  id?: string;
-  receipt_id?: string;
   name: string;
   price: number;
   category: string;
 }
 
+export type ReceiptStatus = 'active' | 'expired' | 'refunded';
+
+export interface ReceiptDocument {
+  name: string;
+  type: 'pdf' | 'png' | 'jpg';
+  size: string;
+  url: string;
+}
+
 export interface Receipt {
   id: string;
-  user_id?: string;
   store_name: string;
   total_amount: number;
   currency: string;
-  purchase_date: string; // YYYY-MM-DD
-  return_deadline: string | null; // YYYY-MM-DD
-  warranty_expiry: string | null; // YYYY-MM-DD
-  status: 'active' | 'returned' | 'expired' | 'refunded';
+  purchase_date: string;
+  return_deadline: string;
+  warranty_expiry: string | null;
+  status: ReceiptStatus;
   is_reimbursable: boolean;
   is_tax_related: boolean;
   category: string;
   items: ReceiptItem[];
-  created_at?: string;
+  is_paid?: boolean;
+  due_date?: string;
+  document?: ReceiptDocument;
 }
 
-export interface PendingBill {
-  id: string;
-  merchant: string;
-  amount: number;
-  due_date: string;
-  category: string;
-  is_paid: boolean;
-}

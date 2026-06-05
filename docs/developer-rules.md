@@ -103,7 +103,7 @@ When designing multiple variations of the same screen layout (e.g., Variant A vs
 * **Mobile Native Event Handlers:** Web event attributes (e.g., `onClick`, `onChange`) are strictly forbidden. Use native callbacks (e.g., `onPress`, `onChangeText`) exclusively.
 * **No Direct DB or Client Calls in Screens:** Never run `supabase.from('receipts')` inside an Expo Router screen component. Always wrap queries in a custom hook inside `hooks/` or a service wrapper in `lib/`.
 * **No Console Log Pollution:** During development, route complex logs, email text samples, or parsing outputs to file writes inside `test/logs/` instead of dumping raw texts into the terminal stdout.
-* **Component File Size Limit:** Keep visual components small (preferably under 200 lines). If a file exceeds 300 lines, refactor sub-components into `components/features/` or extract state logic into custom hooks.
+* **Component File Size Limit:** Keep visual components small (preferably under 400 lines). If a file exceeds 700 lines, refactor sub-components into `components/features/` or extract state logic into custom hooks.
 
 ---
 
@@ -130,8 +130,28 @@ When modifying files, you are **strictly forbidden** from replacing existing cod
 You are **strictly forbidden** from copy-pasting HTML elements or raw web vector tags (such as lowercase `<svg>`, `<circle>`, `<path>`, `<line>`, `<rect>`) into any React Native workspace. You must always use the `react-native-svg` package and map these to capitalized native SVG components (e.g. `<Svg>`, `<Circle>`, `<Path>`, `<Line>`, `<Rect>`). Failing to do this causes immediate runtime crashes on Android and iOS devices.
 
 ### Rule 4: Mandatory Component File Size Limits (Anti-Monolith Rule)
-You must **never** create or maintain a single React Native UI file that exceeds 300 lines of code. If a file exceeds this limit, you are strictly required to split it by extracting child components (e.g., modals, headers, lists, drawers) into dedicated standalone files under `components/features/` or `components/ui/`. Keeping a 2,000+ line monolith file is unacceptable.
+You must **never** create or maintain a single React Native UI file that exceeds 700 lines of code. If a file exceeds this limit, you are strictly required to split it by extracting child components (e.g., modals, headers, lists, drawers) into dedicated standalone files under `components/features/` or `components/ui/`. Keeping a 2,000+ line monolith file is unacceptable.
 
 ### Rule 5: Mandatory Compile Checks
 After any code changes or file creations, you must run the project typecheck command (`npm run ts:check` or `tsc`) to verify that the workspace is 100% type-safe and has no broken imports. If you fail to verify compilation correctness, your changes are considered invalid.
+
+### Rule 6: Mandatory Pre-flight Verification & Context Anchoring
+To prevent AI agents from "forgetting" developer rules due to context decay, every AI assistant must adhere to this sequence:
+1. **Rule Anchoring:** Open and read `docs/developer-rules.md` as the very first action of any session, or when resuming work.
+2. **Rule Checklist:** Before submitting changes, the assistant must explicitly verify and state in their response how they complied with:
+   - Rule 1 (No relative imports)
+   - Rule 2 (No placeholder truncation)
+   - Rule 3 (React Native primitives only)
+   - Rule 4 (Component size limits < 700 lines)
+   - Rule 5 (Typecheck compile verification)
+3. **Active Enforcement:** If a file violates size limits or uses web elements, the AI must fix it immediately rather than propagating the non-compliant code.
+
+---
+
+## 📝 7. Documentation Hygiene & Registry Logging
+Whenever a developer (human or AI) creates, refactors, or modifies components or system features, they must document these changes in the corresponding Markdown registry files in a well-organized way:
+* **UI Sandboxing Changes**: Any additions, deletions, or structural modifications to sandbox files must be registered inside [temp_UI_history.md](file:///d:/coding/crazy%20idea/Receipt%20Guardian/test/sandbox/dashboard/temp_UI_history.md) with their current line count and functional role.
+* **Core Architectural Shifts**: Major modifications to production folders, hooks, database schemas, or configurations must be logged inside [implementation.md](file:///d:/coding/crazy%20idea/Receipt%20Guardian/implementation.md) or the relevant design docs.
+* **Accuracy and Alignment**: All documentation edits must accurately list filenames, paths, and details, ensuring the markdown registries remain 100% aligned with the actual code structure.
+
 
