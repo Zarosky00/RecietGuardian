@@ -45,6 +45,9 @@ To prevent the `test/` folder itself from becoming cluttered, files must be plac
 
 ## 🔄 3. UI Sandbox Workflow & Seamless Transition Rules
 
+> [!IMPORTANT]
+> All sandbox development, hook structure, and production migration steps must strictly follow the [Sandbox Prototype to Production Migration Guide](file:///d:/coding/crazy%20idea/Receipt%20Guardian/docs/sandbox-migration-guide.md). This guide establishes the chronological **Golden Order of Prototyping** (Types -> Stateful Mock Hooks -> UI -> Environment Toggles) to guarantee zero-refactor migrations.
+
 To ensure that moving a UI prototype from the sandbox to the production directory is seamless and never breaks:
 
 ### Prototyping Phase
@@ -122,3 +125,13 @@ You are **strictly forbidden** from writing relative paths for folder depths gre
 
 ### Rule 2: No Placeholder Code Truncation
 When modifying files, you are **strictly forbidden** from replacing existing code logic with placeholder comments (e.g., `// ... rest of the code here` or `// ... existing imports ...`). You must always write out the full, complete block of code being changed, ensuring that all unmodified code remains exactly intact.
+
+### Rule 3: Enforce React Native Primitives (No HTML/Web Graphics)
+You are **strictly forbidden** from copy-pasting HTML elements or raw web vector tags (such as lowercase `<svg>`, `<circle>`, `<path>`, `<line>`, `<rect>`) into any React Native workspace. You must always use the `react-native-svg` package and map these to capitalized native SVG components (e.g. `<Svg>`, `<Circle>`, `<Path>`, `<Line>`, `<Rect>`). Failing to do this causes immediate runtime crashes on Android and iOS devices.
+
+### Rule 4: Mandatory Component File Size Limits (Anti-Monolith Rule)
+You must **never** create or maintain a single React Native UI file that exceeds 300 lines of code. If a file exceeds this limit, you are strictly required to split it by extracting child components (e.g., modals, headers, lists, drawers) into dedicated standalone files under `components/features/` or `components/ui/`. Keeping a 2,000+ line monolith file is unacceptable.
+
+### Rule 5: Mandatory Compile Checks
+After any code changes or file creations, you must run the project typecheck command (`npm run ts:check` or `tsc`) to verify that the workspace is 100% type-safe and has no broken imports. If you fail to verify compilation correctness, your changes are considered invalid.
+
